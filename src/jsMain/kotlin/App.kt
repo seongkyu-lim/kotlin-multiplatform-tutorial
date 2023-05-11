@@ -22,7 +22,22 @@ val App = FC<Props> {
         shoppingList.sortedByDescending(ShoppingListItem::priority).forEach { item ->
             li {
                 key = item.toString()
+                onClick = {
+                    scope.launch {
+                        deleteShoppingListItem(item)
+                        shoppingList = getShoppingList()
+                    }
+                }
                 +"[${item.priority}] ${item.desc} "
+            }
+        }
+    }
+    inputComponent {
+        onSubmit = { input ->
+            val cartItem = ShoppingListItem(input.replace("!", ""), input.count { it == '!' })
+            scope.launch {
+                addShoppingListItem(cartItem)
+                shoppingList = getShoppingList()
             }
         }
     }
